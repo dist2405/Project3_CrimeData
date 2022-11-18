@@ -11,6 +11,10 @@ let db_filename = path.join(__dirname, 'db', 'stpaul_crime.sqlite3');
 
 let app = express();
 let port = 8000;
+let SQLquery = 'SELECT case_number, date(date_time) AS date,time(date_time) as time, inc.code\
+                  , incident, incident_type, police_grid, inc.neighborhood_number, neighborhood_name\
+                   FROM incidents inc LEFT JOIN neighborhoods nei ON inc.neighborhood_number = nei.neighborhood_number\
+                    LEFT JOIN codes cod ON inc.code = cod.code'
 
 app.use(express.json());
 
