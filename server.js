@@ -36,9 +36,15 @@ app.get('/codes', (req, res) => {
     clause = 'WHERE';
     if(req.query.hasOwnProperty('code')){
         let codearray = req.query.code.split(',');
-        SQLquery = SQLquery +  clause + ' code IN ( ? ';
-        params.push(req.query.code);
-        
+        SQLquery = SQLquery +  clause + ' code IN ( ?';
+        let i;
+        let between = '';
+        for(i=0;i< codearray.length;i++){
+            params.push(parseInt(codearray[i]));
+            SQLquery = SQLquery + between;
+            between = ',? ';
+        };
+        console.log(SQLquery)
         SQLquery = SQLquery +')';
         clause = 'AND';
         
@@ -49,7 +55,7 @@ app.get('/codes', (req, res) => {
         console.log(rows);
         res.status(200).type('json').send(rows);
     });
-    //res.status(200).type('json').send({}); // <-- you will need to change this
+
 });
 
 // GET request handler for neighborhoods
