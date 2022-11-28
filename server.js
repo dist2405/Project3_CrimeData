@@ -14,21 +14,7 @@ let port = 8000;
 let SQLquery = '';
 
 app.use(express.json());
-//to parse the string
-function parseQueryString(q_string){
-    let key_values = q_string.substring(1).split('&');
-    console.log(key_values);
-    let i;
-    let query_obj = {};
-    for(i=0;i< key_values.length;i++){
-        let key_val = key_values[i].split('=');
-        query_obj[key_val[0]]= key_val[1];
-        console.log(key_val);
 
-    }
-    console.log(query_obj);
-    return query_obj;
-}
 
 // Open SQLite3 database (in read-only mode)
 let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
@@ -49,13 +35,21 @@ app.get('/codes', (req, res) => {
     let params = [];
     clause = 'WHERE';
     if(req.query.hasOwnProperty('code')){
-        SQLquery = SQLquery +  clause + ' code = ? '
+        let codearray = req.query.code.split(',');
+        SQLquery = SQLquery +  clause + ' code IN ( ? ';
         params.push(req.query.code);
+        
+        SQLquery = SQLquery +')';
         clause = 'AND';
+        
     };
     SQLquery = SQLquery + ' ORDER BY code ';
-
-    res.status(200).type('json').send({}); // <-- you will need to change this
+    db.all(SQLquery,params,(err, rows)=>{
+        console.log(err);
+        console.log(rows);
+        res.status(200).type('json').send(rows);
+    });
+    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // GET request handler for neighborhoods
