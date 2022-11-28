@@ -37,6 +37,7 @@ app.get('/codes', (req, res) => {
     if(req.query.hasOwnProperty('code')){
         let codearray = req.query.code.split(',');
         SQLquery = SQLquery +  clause + ' code IN ( ?';
+        //loops through multiple codes
         let i;
         let between = '';
         for(i=0;i< codearray.length;i++){
@@ -51,8 +52,7 @@ app.get('/codes', (req, res) => {
     };
     SQLquery = SQLquery + ' ORDER BY code ';
     db.all(SQLquery,params,(err, rows)=>{
-        console.log(err);
-        console.log(rows);
+
         res.status(200).type('json').send(rows);
     });
 
@@ -62,9 +62,33 @@ app.get('/codes', (req, res) => {
 app.get('/neighborhoods', (req, res) => {
     SQLquery = 'SELECT neighborhood_number AS id, neighborhood_name as name FROM neighborhoods ';
     console.log(req.query); // query object (key-value pairs after the ? in the url)
-    //need if statement for certain id's 
+    //need if statement for certain codes
+    let params = [];
+    clause = 'WHERE';
+    if(req.query.hasOwnProperty('id')){
+        let codearray = req.query.id.split(',');
+        SQLquery = SQLquery +  clause + ' neighborhood_number IN ( ?';
+        //loops through multiple codes
+        let i;
+        let between = '';
+        for(i=0;i< codearray.length;i++){
+            params.push(parseInt(codearray[i]));
+            SQLquery = SQLquery + between;
+            between = ',? ';
+        };
+        console.log(SQLquery)
+        SQLquery = SQLquery +')';
+        clause = 'AND';
+        
+    };
     SQLquery = SQLquery + ' ORDER BY neighborhood_number ';
-    res.status(200).type('json').send({}); // <-- you will need to change this
+    db.all(SQLquery,params,(err, rows)=>{
+        console.log(err);
+        res.status(200).type('json').send(rows);
+    });
+    //need if statement for certain id's 
+    
+    //res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
 // GET request handler for crime incidents
