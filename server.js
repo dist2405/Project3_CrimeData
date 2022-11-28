@@ -14,6 +14,21 @@ let port = 8000;
 let SQLquery = '';
 
 app.use(express.json());
+//to get different 
+function parseQueryString(q_string){
+    let key_values = q_string.substring(1).split('?');
+    console.log(key_values);
+    let i;
+    let query_obj = {};
+    for(i=0;i< key_values.length;i++){
+        let key_val = key_values[i].split('=');
+        query_obj[key_val[0]]= key_val[1];
+        console.log(key_val);
+
+    }
+    console.log(query_obj);
+    return query_obj;
+}
 
 // Open SQLite3 database (in read-only mode)
 let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
@@ -31,7 +46,15 @@ app.get('/codes', (req, res) => {
     SQLquery = 'SELECT code, incident_type AS type FROM codes ';
     console.log(req.query); // query object (key-value pairs after the ? in the url)
     //need if statement for certain codes
+    let params = [];
+    clause = 'WHERE';
+    if(req.query.hasOwnProperty('code')){
+        SQLquery = SQLquery +  clause + ' code = ? '
+        params.push(req.query.code);
+        clause = 'AND';
+    };
     SQLquery = SQLquery + ' ORDER BY code ';
+
     res.status(200).type('json').send({}); // <-- you will need to change this
 });
 
