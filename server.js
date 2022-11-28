@@ -14,9 +14,9 @@ let port = 8000;
 let SQLquery = '';
 
 app.use(express.json());
-//to get different 
+//to parse the string
 function parseQueryString(q_string){
-    let key_values = q_string.substring(1).split('?');
+    let key_values = q_string.substring(1).split('&');
     console.log(key_values);
     let i;
     let query_obj = {};
