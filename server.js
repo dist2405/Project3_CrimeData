@@ -174,8 +174,52 @@ app.put("/new-incident", (req, res) => {
   console.log(req.body); // uploaded data
   SQLcheck = "SELECT case_number FROM Incidents WHERE case_number = ?"; //first we should check if this is null
   //then insert the new values
+  
   SQLquery =
     "INSERT INTO (case_number,date_time, code, incident,police_grid, neighborhood_number,block) VALUES (";
+    let between = "";
+    params = [];
+    count = 0;
+    if(req.params.hasOwnProperty("case_number")) {
+      SQLquery = SQLquery + "? ";
+      params.push(req.params.case_number);
+      count = count +1
+    }
+    if(req.params.hasOwnProperty("date_time")) {
+        SQLquery = SQLquery + ",? ";
+        params.push(req.params.date_time);
+        count = count +1
+      }
+      if(req.params.hasOwnProperty("code")) {
+        SQLquery = SQLquery + ",? ";
+        params.push(req.params.code);
+        count = count +1
+      }
+      if(req.params.hasOwnProperty("incident")) {
+        SQLquery = SQLquery + ",? ";
+        params.push(req.params.incident);
+        count = count +1
+      }
+      if(req.params.hasOwnProperty("police_grid")) {
+        SQLquery = SQLquery + ",? ";
+        params.push(req.params.police_grid);
+        count = count +1
+      }
+      if(req.params.hasOwnProperty("neighborhood_number")) {
+        SQLquery = SQLquery + ",? ";
+        params.push(req.params.neighborhood_number);
+        count = count +1
+      }
+      if(req.params.hasOwnProperty("block")) {
+        SQLquery = SQLquery + ",? ";
+        params.push(req.params.block);
+        count = count +1
+      }
+      if(count = 7){
+        //all values are in there and can proceed
+      }
+
+
 
   //once end the statement with a )
   SQLquery = SQLquery + ")";
