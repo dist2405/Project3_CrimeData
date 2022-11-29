@@ -180,37 +180,37 @@ app.put("/new-incident", (req, res) => {
     let between = "";
     params = [];
     count = 0;
-    if(req.params.hasOwnProperty("case_number")) {
+    if(req.query.hasOwnProperty("case_number")) {
       SQLquery = SQLquery + "? ";
       params.push(req.params.case_number);
       count = count +1
     }
-    if(req.params.hasOwnProperty("date_time")) {
+    if(req.query.hasOwnProperty("date_time")) {
         SQLquery = SQLquery + ",? ";
         params.push(req.params.date_time);
         count = count +1
       }
-      if(req.params.hasOwnProperty("code")) {
+      if(req.query.hasOwnProperty("code")) {
         SQLquery = SQLquery + ",? ";
         params.push(req.params.code);
         count = count +1
       }
-      if(req.params.hasOwnProperty("incident")) {
+      if(req.query.hasOwnProperty("incident")) {
         SQLquery = SQLquery + ",? ";
         params.push(req.params.incident);
         count = count +1
       }
-      if(req.params.hasOwnProperty("police_grid")) {
+      if(req.query.hasOwnProperty("police_grid")) {
         SQLquery = SQLquery + ",? ";
         params.push(req.params.police_grid);
         count = count +1
       }
-      if(req.params.hasOwnProperty("neighborhood_number")) {
+      if(req.query.hasOwnProperty("neighborhood_number")) {
         SQLquery = SQLquery + ",? ";
         params.push(req.params.neighborhood_number);
         count = count +1
       }
-      if(req.params.hasOwnProperty("block")) {
+      if(req.query.hasOwnProperty("block")) {
         SQLquery = SQLquery + ",? ";
         params.push(req.params.block);
         count = count +1
