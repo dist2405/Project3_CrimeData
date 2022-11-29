@@ -215,14 +215,15 @@ app.put("/new-incident", (req, res) => {
         params.push(req.params.block);
         count = count +1
       }
+       //once end the statement with a )
+      SQLquery = SQLquery + ")";
       if(count = 7){
         //all values are in there and can proceed
       }
 
 
 
-  //once end the statement with a )
-  SQLquery = SQLquery + ")";
+ 
   res.status(200).type("txt").send("OK"); // <-- you may need to change this
 });
 
