@@ -86,20 +86,41 @@ app.get('/neighborhoods', (req, res) => {
         console.log(err);
         res.status(200).type('json').send(rows);
     });
-    //need if statement for certain id's 
     
-    //res.status(200).type('json').send({}); // <-- you will need to change this
+    
 });
 
 // GET request handler for crime incidents
 app.get('/incidents', (req, res) => {
     SQLquery = 'SELECT case_number, date(date_time) AS date,time(date_time) as time,code, incident, police_grid, neighborhood_number, block FROM Incidents';
     console.log(req.query); // query object (key-value pairs after the ? in the url)
+    let RowCount = 1000;
     //need if statement for start/end dates/code/grid/ neighbothood
-    SQLquery = SQLquery + 'ORDER BY date_time';
+    let params = [];
+    clause = ' WHERE ';
+    if(req.query.hasOwnProperty('start_date')){
+        SQLquery = SQLquery +  clause + ' date >= ?';
+            params.push(req.query.start_date);
+        clause = 'AND';
+        console.log(SQLquery)
+        
+    };
+    if(req.query.hasOwnProperty('end_date')){
+        SQLquery = SQLquery +  clause + ' date <=?';
+            params.push(req.query.end_date);
+        clause = 'AND';
+        console.log(SQLquery)
+        
+    };
+
+    SQLquery = SQLquery + ' ORDER BY date_time DESC ';
     //need if statement here for limit
 
-    res.status(200).type('json').send({}); // <-- you will need to change this
+
+    db.all(SQLquery,params,(err, rows)=>{
+        console.log(err);
+        res.status(200).type('json').send(rows);
+    });
 });
 let SQLcheck = '';
 // PUT request handler for new crime incident
