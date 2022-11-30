@@ -229,14 +229,35 @@ app.put("/new-incident", (req, res) => {
 
 // DELETE request handler for new crime incident
 app.delete("/remove-incident", (req, res) => {
-  console.log(req.body); // uploaded data
-  SQLcheck = "SELECT case_number FROM Incidents WHERE case_number = ?"; //first we should check if this is null
-
-  //then delete if found
-  SQLquery = "DELETE FROM Incidents WHERE case_number = ?";
-
-  res.status(200).type("txt").send("OK"); // <-- you may need to change this
-});
+    params = [];
+    console.log(req.query); // uploaded data
+    SQLcheck = "SELECT case_number FROM Incidents WHERE case_number = ?"; //first we should check if this is null
+    SQLquery = "DELETE FROM Incidents WHERE case_number = ?";
+  
+    if (req.query.hasOwnProperty("case_number")) {
+      params.push(req.query.case_number);
+    }
+  
+    db.all(SQLcheck, params, (err, rows) => {
+      console.log(err);
+      console.log(SQLcheck);
+      console.log(rows);
+      console.log(params);
+      if(rows.length === 0) {
+        console.log("not found");
+        res.status(500).type("txt").send("Case number not found.");
+      } else {
+        db.run(SQLquery, params, (err, res2) => {
+            console.log("found");
+          console.log(err);
+          res.status(200).type("txt").send("Deleted case number.");
+        });
+      }
+    });
+  
+  
+  });
+  
 
 // Create Promise for SQLite3 database SELECT query
 function databaseSelect(query, params) {
