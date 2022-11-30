@@ -174,84 +174,88 @@ app.put("/new-incident", (req, res) => {
   console.log(req.body); // uploaded data
   SQLcheck = "SELECT case_number FROM Incidents WHERE case_number = ?"; //first we should check if this is null
   //then insert the new values
-  
+
   SQLquery =
-    "INSERT INTO (case_number,date_time, code, incident,police_grid, neighborhood_number,block) VALUES (";
-    let between = "";
-    params = [];
-    count = 0;
-    if(req.query.hasOwnProperty("case_number")) {
-      SQLquery = SQLquery + "? ";
-      params.push(req.query.case_number);
-      count = count +1;
-    }
-    if(req.query.hasOwnProperty("date_time")) {
-        SQLquery = SQLquery + ",? ";
-        params.push(req.query.date_time);
-        count = count +1;
+    "INSERT INTO Incidents (case_number,date_time, code, incident,police_grid, neighborhood_number,block) VALUES (";
+  let between = "";
+  params = [];
+  count = 0;
+  if (req.body.hasOwnProperty("case_number")) {
+    SQLquery = SQLquery + "? ";
+    params.push(req.body.case_number);
+    count = count + 1;
+  }
+  if (req.body.hasOwnProperty("date_time")) {
+    SQLquery = SQLquery + ",? ";
+    params.push(req.body.date_time);
+    count = count + 1;
+  }
+  if (req.body.hasOwnProperty("code")) {
+    SQLquery = SQLquery + ",? ";
+    params.push(req.body.code);
+    count = count + 1;
+  }
+  if (req.body.hasOwnProperty("incident")) {
+    SQLquery = SQLquery + ",? ";
+    params.push(req.body.incident);
+    count = count + 1;
+  }
+  if (req.body.hasOwnProperty("police_grid")) {
+    SQLquery = SQLquery + ",? ";
+    params.push(req.body.police_grid);
+    count = count + 1;
+  }
+  if (req.body.hasOwnProperty("neighborhood_number")) {
+    SQLquery = SQLquery + ",? ";
+    params.push(req.body.neighborhood_number);
+    count = count + 1;
+  }
+  if (req.body.hasOwnProperty("block")) {
+    SQLquery = SQLquery + ",? ";
+    params.push(req.body.block);
+    count = count + 1;
+  }
+  SQLquery = SQLquery + ")";
+  if (count == 7) {
+    //all values are in there and can proceed
+    db.all(SQLcheck, req.body.case_number, (err, rows) => {
+      if (rows.length === 1) {
+        res.status(500).type("txt").send("Case number found already.");
+      } else {
+        db.run(SQLquery, params, (err, res2) => {
+          res.status(200).type("txt").send("Added case number.");
+        });
       }
-      if(req.query.hasOwnProperty("code")) {
-        SQLquery = SQLquery + ",? ";
-        params.push(req.query.code);
-        count = count +1;
-      }
-      if(req.query.hasOwnProperty("incident")) {
-        SQLquery = SQLquery + ",? ";
-        params.push(req.query.incident);
-        count = count +1;
-      }
-      if(req.query.hasOwnProperty("police_grid")) {
-        SQLquery = SQLquery + ",? ";
-        params.push(req.query.police_grid);
-        count = count +1;
-      }
-      if(req.query.hasOwnProperty("neighborhood_number")) {
-        SQLquery = SQLquery + ",? ";
-        params.push(req.query.neighborhood_number);
-        count = count +1;
-      }
-      if(req.query.hasOwnProperty("block")) {
-        SQLquery = SQLquery + ",? ";
-        params.push(req.query.block);
-        count = count +1;
-      }
-       //once end the statement with a )
-        SQLquery = SQLquery + ")";
-      if(count = 7){
-        //all values are in there and can proceed
-      }
-
-
-
- 
-  res.status(200).type("txt").send("OK"); // <-- you may need to change this
+    });
+  } else {
+    res
+      .status(500)
+      .type("txt")
+      .send("Missing parameters, must have 7 in total.");
+  }
 });
 
 // DELETE request handler for new crime incident
 app.delete("/remove-incident", (req, res) => {
-    params = [];
-    console.log(req.query); // uploaded data
-    SQLcheck = "SELECT case_number FROM Incidents WHERE case_number = ?"; //first we should check if this is null
-    SQLquery = "DELETE FROM Incidents WHERE case_number = ?";
-  
-    if (req.query.hasOwnProperty("case_number")) {
-      params.push(req.query.case_number);
+  params = [];
+  console.log(req.query); // uploaded data
+  SQLcheck = "SELECT case_number FROM Incidents WHERE case_number = ?"; //first we should check if this is null
+  SQLquery = "DELETE FROM Incidents WHERE case_number = ?";
+
+  if (req.query.hasOwnProperty("case_number")) {
+    params.push(req.query.case_number);
+  }
+
+  db.all(SQLcheck, params, (err, rows) => {
+    if (rows.length === 0) {
+      res.status(500).type("txt").send("Case number not found.");
+    } else {
+      db.run(SQLquery, params, (err, res2) => {
+        res.status(200).type("txt").send("Deleted case number.");
+      });
     }
-  
-    db.all(SQLcheck, params, (err, rows) => {
-   
-      if(rows.length === 0) {
-        res.status(500).type("txt").send("Case number not found.");
-      } else {
-        db.run(SQLquery, params, (err, res2) => {
-          res.status(200).type("txt").send("Deleted case number.");
-        });
-      }
-    });
-  
-  
   });
-  
+});
 
 // Create Promise for SQLite3 database SELECT query
 function databaseSelect(query, params) {
