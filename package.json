@@ -3,25 +3,30 @@
     "version": "0.0.0",
     "description": "RESTful API Server using Node JS",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Angie Distad",
+        "email": "dist2405@stthomas.edu"
     },
     "contributors": [
         {
-            "name": "",
-            "email": ""
+            "name": "Angie Distad",
+            "email": "dist2405@stthomas.edu"
         },
         {
-            "name": "",
-            "email": ""
+            "name": "Jordan Curtis",
+            "email": "jc.curtis@stthomas.edu"
+        },
+        {
+            "name": "Andrew Abboud",
+            "email": "abbo5543@stthomas.edu"
         }
     ],
     "main": "server.js",
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/dist2405/Project3_CrimeData"
     },
     "dependencies": {
+        "cors": "^2.8.5",
         "express": "^4.18.2",
         "sqlite3": "^5.1.2"
     }
