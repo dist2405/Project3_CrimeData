@@ -239,17 +239,11 @@ app.delete("/remove-incident", (req, res) => {
     }
   
     db.all(SQLcheck, params, (err, rows) => {
-      console.log(err);
-      console.log(SQLcheck);
-      console.log(rows);
-      console.log(params);
+   
       if(rows.length === 0) {
-        console.log("not found");
         res.status(500).type("txt").send("Case number not found.");
       } else {
         db.run(SQLquery, params, (err, res2) => {
-            console.log("found");
-          console.log(err);
           res.status(200).type("txt").send("Deleted case number.");
         });
       }
