@@ -238,12 +238,12 @@ app.put("/new-incident", (req, res) => {
 // DELETE request handler for new crime incident
 app.delete("/remove-incident", (req, res) => {
   params = [];
-  console.log(req.query); // uploaded data
+  console.log(req.body); // uploaded data
   SQLcheck = "SELECT case_number FROM Incidents WHERE case_number = ?"; //first we should check if this is null
   SQLquery = "DELETE FROM Incidents WHERE case_number = ?";
 
-  if (req.query.hasOwnProperty("case_number")) {
-    params.push(req.query.case_number);
+  if (req.body.hasOwnProperty("case_number")) {
+    params.push(req.body.case_number);
   }
 
   db.all(SQLcheck, params, (err, rows) => {
